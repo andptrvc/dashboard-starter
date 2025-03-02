@@ -50,8 +50,8 @@ const ResultsListPage = () => {
           <Link href={`/list/announcements/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
               <Image
-                src="/edit.png"
-                alt="edit"
+                src="/update.png"
+                alt="update"
                 width={16}
                 height={16}
               />
@@ -100,8 +100,8 @@ const ResultsListPage = () => {
             {role === "admin" && (
               <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
                 <Image
-                  src="/plus.png"
-                  alt="plus"
+                  src="/create.png"
+                  alt="create"
                   width={14}
                   height={14}
                 />
