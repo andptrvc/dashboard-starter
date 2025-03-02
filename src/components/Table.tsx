@@ -14,7 +14,11 @@ const Table = ({
       <thead>
         <tr className="text-left text-gray-500 text-sm">
           {columns.map((column) => (
-            <th key={column.header}>{column.header}</th>
+            <th
+              key={column.header}
+              className={column.className}>
+              {column.header}
+            </th>
           ))}
         </tr>
       </thead>
