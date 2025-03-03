@@ -1,34 +1,33 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { z } from "zod";
 import InputField from "../InputField";
 import Image from "next/image";
 
 const schema = z.object({
   username: z
     .string()
-    .min(3, { message: "Usename must be at least 3 characters long!" })
-    .max(20, { message: "Usename must be maximum 20 characters long!" }),
-  email: z.string().email({ message: "Invalid email address" }),
+    .min(3, { message: "Username must be at least 3 characters long!" })
+    .max(20, { message: "Username must be at most 20 characters long!" }),
+  email: z.string().email({ message: "Invalid email address!" }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long!" }),
-  firstName: z.string().min(1, { message: "First name is requied" }),
-  lastName: z.string().min(1, { message: "Last name is requied" }),
-  phone: z.string().min(1, { message: "Phone is requied" }),
-  address: z.string().min(1, { message: "Address is requied" }),
-  bloodType: z.string().min(1, { message: "Bloodtype is requied" }),
-  birthday: z.date({ message: "Birthday is requied" }),
-  sex: z.enum(["male", "female"], { message: "Sex is requied" }),
-  img: z.instanceof(File, { message: "Image is requied" }),
+  firstName: z.string().min(1, { message: "First name is required!" }),
+  lastName: z.string().min(1, { message: "Last name is required!" }),
+  phone: z.string().min(1, { message: "Phone is required!" }),
+  address: z.string().min(1, { message: "Address is required!" }),
+  bloodType: z.string().min(1, { message: "Blood Type is required!" }),
+  birthday: z.date({ message: "Birthday is required!" }),
+  sex: z.enum(["male", "female"], { message: "Sex is required!" }),
+  img: z.instanceof(File, { message: "Image is required" }),
 });
 
 type Inputs = z.infer<typeof schema>;
 
-const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) => {
+const StudentForm = ({ type, data }: { type: "create" | "update"; data?: any }) => {
   const {
     register,
     handleSubmit,
@@ -40,29 +39,29 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
+
   return (
     <form
       className="flex flex-col gap-8"
       onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">Create a new teacher</h1>
+      <h1 className="text-xl font-semibold">Create a new student</h1>
       <span className="text-xs text-gray-400 font-medium">
         Authentication Information
       </span>
-      <div className="flex justify-between flex-wrap gap-2">
+      <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="Username"
           name="username"
           defaultValue={data?.username}
           register={register}
-          error={errors.username}
+          error={errors?.username}
         />
         <InputField
           label="Email"
           name="email"
-          type="email"
           defaultValue={data?.email}
           register={register}
-          error={errors.email}
+          error={errors?.email}
         />
         <InputField
           label="Password"
@@ -70,11 +69,11 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
           type="password"
           defaultValue={data?.password}
           register={register}
-          error={errors.password}
+          error={errors?.password}
         />
       </div>
       <span className="text-xs text-gray-400 font-medium">Personal Information</span>
-      <div className="flex justify-between flex-wrap gap-2">
+      <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="First Name"
           name="firstName"
@@ -128,7 +127,7 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
             <option value="female">Female</option>
           </select>
           {errors.sex?.message && (
-            <p className="text-sm text-red-400">{errors.sex?.message.toString()}</p>
+            <p className="text-xs text-red-400">{errors.sex.message.toString()}</p>
           )}
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
@@ -137,7 +136,7 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
             htmlFor="img">
             <Image
               src="/upload.png"
-              alt="upload"
+              alt=""
               width={28}
               height={28}
             />
@@ -145,20 +144,20 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
           </label>
           <input
             type="file"
-            className="hidden"
             id="img"
             {...register("img")}
+            className="hidden"
           />
           {errors.img?.message && (
-            <p className="text-sm text-red-400">{errors.img?.message.toString()}</p>
+            <p className="text-xs text-red-400">{errors.img.message.toString()}</p>
           )}
         </div>
       </div>
-      <button className="bg-blue-500 text-white p-2 rounded-md">
+      <button className="bg-blue-400 text-white p-2 rounded-md">
         {type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );
 };
 
-export default TeacherForm;
+export default StudentForm;
