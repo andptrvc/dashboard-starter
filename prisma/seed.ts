@@ -79,11 +79,7 @@ async function main() {
     await prisma.lesson.create({
       data: {
         name: `Lesson${i}`,
-        day: Day[
-          Object.keys(Day)[
-            Math.floor(Math.random() * Object.keys(Day).length)
-          ] as keyof typeof Day
-        ],
+        day: Day[Object.keys(Day)[Math.floor(Math.random() * Object.keys(Day).length)] as keyof typeof Day],
         startTime: new Date(new Date().setHours(new Date().getHours() + 1)),
         endTime: new Date(new Date().setHours(new Date().getHours() + 3)),
         subjectId: (i % 10) + 1,
@@ -114,6 +110,7 @@ async function main() {
       data: {
         id: `student${i}`,
         username: `student${i}`,
+        password: `password${i}`,
         name: `SName${i}`,
         surname: `SSurname ${i}`,
         email: `student${i}@example.com`,

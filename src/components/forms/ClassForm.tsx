@@ -4,13 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { subjectSchema, SubjectSchemaFormType } from "@/lib/formValidationSchemas";
-import { createSubject, updateSubject } from "@/lib/actions";
+import { classSchema, ClassSchemaFormType } from "@/lib/formValidationSchemas";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { createClass, updateClass } from "@/lib/actions";
 
-const SubjectForm = ({
+const ClassForm = ({
   type,
   data,
   setOpen,
@@ -25,11 +25,11 @@ const SubjectForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SubjectSchemaFormType>({
-    resolver: zodResolver(subjectSchema),
+  } = useForm<ClassSchemaFormType>({
+    resolver: zodResolver(classSchema),
   });
 
-  const [state, formAction] = useFormState(type === "create" ? createSubject : updateSubject, { success: false, error: false });
+  const [state, formAction] = useFormState(type === "create" ? createClass : updateClass, { success: false, error: false });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
@@ -40,27 +40,33 @@ const SubjectForm = ({
 
   useEffect(() => {
     if (state.success) {
-      toast(`Subject has been ${type === "create" ? "created" : "updated"}!`);
+      toast(`Class has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
     }
   }, [state]);
 
-  const { teachers } = relatedData;
+  const { teachers, grades } = relatedData;
 
   return (
     <form
       className="flex flex-col gap-8"
       onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new subject" : "Update the subject"}</h1>
-      <span className="text-xs text-gray-400 font-medium">Subject information</span>
+      <h1 className="text-xl font-semibold">{type === "create" ? "Create a new class" : "Update the class"}</h1>
       <div className="flex justify-between flex-wrap gap-2">
         <InputField
-          label="Subject name"
+          label="Class name"
           name="name"
           defaultValue={data?.name}
           register={register}
           error={errors.name}
+        />{" "}
+        <InputField
+          label="Capacity"
+          name="capacity"
+          defaultValue={data?.capacity}
+          register={register}
+          error={errors.capacity}
         />
         {data && (
           <InputField
@@ -73,21 +79,38 @@ const SubjectForm = ({
           />
         )}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Teachers</label>
+          <label className="text-xs text-gray-500">Supervisor</label>
           <select
-            multiple
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            {...register("teachers")}
-            defaultValue={data?.teachers}>
+            {...register("supervisorId")}
+            defaultValue={data?.supervisorId}>
             {teachers.map((teacher: { id: string; name: string; surname: string }) => (
               <option
                 value={teacher.id}
-                key={teacher.id}>
+                key={teacher.id}
+                selected={data && teacher.id === data.supervisorId}>
                 {teacher.name + " " + teacher.surname}
               </option>
             ))}
           </select>
-          {errors.teachers?.message && <p className="text-sm text-red-400">{errors.teachers?.message.toString()}</p>}
+          {errors.supervisorId?.message && <p className="text-sm text-red-400">{errors.supervisorId?.message.toString()}</p>}
+        </div>
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Grade</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("gradeId")}
+            defaultValue={data?.gradeId}>
+            {grades.map((grade: { id: number; level: number }) => (
+              <option
+                value={grade.id}
+                key={grade.id}
+                selected={data && grade.id === data.gradeId}>
+                {grade.level}
+              </option>
+            ))}
+          </select>
+          {errors.gradeId?.message && <p className="text-sm text-red-400">{errors.gradeId?.message.toString()}</p>}
         </div>
       </div>
       {state.error && <span className="text-red-500">Something went wrong</span>}
@@ -96,4 +119,4 @@ const SubjectForm = ({
   );
 };
 
-export default SubjectForm;
+export default ClassForm;

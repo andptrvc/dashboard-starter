@@ -1,11 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
-
-// @ts-ignore
-const { userId, sessionClaims } = await auth();
-
-export const role = (sessionClaims?.metadata as { role?: string })?.role;
-export const currentUserId = userId;
-
 const currentWorkWeek = () => {
   const today = new Date();
   const dayOfWeek = today.getDay();
@@ -24,9 +16,7 @@ const currentWorkWeek = () => {
 
   return { startOfWeek };
 };
-export const adjustScheduleToCurrentWeek = (
-  lessons: { title: string; start: Date; end: Date }[]
-): { title: string; start: Date; end: Date }[] => {
+export const adjustScheduleToCurrentWeek = (lessons: { title: string; start: Date; end: Date }[]): { title: string; start: Date; end: Date }[] => {
   const { startOfWeek } = currentWorkWeek();
 
   return lessons.map((lesson) => {

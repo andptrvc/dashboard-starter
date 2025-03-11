@@ -3,6 +3,61 @@ import { z } from "zod";
 export const subjectSchema = z.object({
   id: z.coerce.number().optional(),
   name: z.string().min(1, { message: "Subject name is required" }),
+  teachers: z.array(z.string()),
 });
 
 export type SubjectSchemaFormType = z.infer<typeof subjectSchema>;
+
+export const classSchema = z.object({
+  id: z.coerce.number().optional(),
+  name: z.string().min(1, { message: "Class name is required" }),
+  capacity: z.coerce.number().min(1, { message: "Capacity is required" }),
+  gradeId: z.coerce.number().min(1, { message: "Grade is required" }),
+  supervisorId: z.coerce.string().optional(),
+});
+
+export type ClassSchemaFormType = z.infer<typeof classSchema>;
+
+export const teacherSchema = z.object({
+  id: z.string().optional(),
+  username: z
+    .string()
+    .min(3, { message: "Usename must be at least 3 characters long!" })
+    .max(20, { message: "Usename must be maximum 20 characters long!" }),
+  email: z.string().email({ message: "Invalid email address" }).optional().or(z.literal("")),
+  password: z.string().min(8, { message: "Password must be at least 8 characters long!" }).optional().or(z.literal("")),
+  name: z.string().min(1, { message: "First name is requied" }),
+  surname: z.string().min(1, { message: "Last name is requied" }),
+  phone: z.string().optional(),
+  address: z.string(),
+  bloodType: z.string().min(1, { message: "Bloodtype is requied" }),
+  birthday: z.coerce.date({ message: "Birthday is requied" }),
+  sex: z.enum(["MALE", "FEMALE"], { message: "Sex is requied" }),
+  img: z.string().optional(),
+  subjects: z.array(z.string()).optional(), // subject ids
+});
+
+export type TeacherSchemaFormType = z.infer<typeof teacherSchema>;
+
+export const studentSchema = z.object({
+  id: z.string().optional(),
+  username: z
+    .string()
+    .min(3, { message: "Usename must be at least 3 characters long!" })
+    .max(20, { message: "Usename must be maximum 20 characters long!" }),
+  email: z.string().email({ message: "Invalid email address" }).optional().or(z.literal("")),
+  password: z.string().min(8, { message: "Password must be at least 8 characters long!" }).optional().or(z.literal("")),
+  name: z.string().min(1, { message: "First name is requied" }),
+  surname: z.string().min(1, { message: "Last name is requied" }),
+  phone: z.string().optional(),
+  address: z.string(),
+  bloodType: z.string().min(1, { message: "Bloodtype is requied" }),
+  birthday: z.coerce.date({ message: "Birthday is requied" }),
+  sex: z.enum(["MALE", "FEMALE"], { message: "Sex is requied" }),
+  img: z.string().optional(),
+  gradeId: z.coerce.number().min(1, { message: "Grade is requied!" }),
+  classId: z.coerce.number().min(1, { message: "Class is requied!" }),
+  parentId: z.string().min(1, { message: "Parent Id is requied!" }),
+});
+
+export type StudentSchemaFormType = z.infer<typeof studentSchema>;
