@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import InputField from "../InputField";
@@ -13,9 +13,7 @@ const schema = z.object({
     .min(3, { message: "Usename must be at least 3 characters long!" })
     .max(20, { message: "Usename must be maximum 20 characters long!" }),
   email: z.string().email({ message: "Invalid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long!" }),
+  password: z.string().min(8, { message: "Password must be at least 8 characters long!" }),
   firstName: z.string().min(1, { message: "First name is requied" }),
   lastName: z.string().min(1, { message: "Last name is requied" }),
   phone: z.string().min(1, { message: "Phone is requied" }),
@@ -28,7 +26,7 @@ const schema = z.object({
 
 type Inputs = z.infer<typeof schema>;
 
-const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) => {
+const TeacherForm = ({ type, data, setOpen }: { type: "create" | "update"; data?: any; setOpen: Dispatch<SetStateAction<boolean>> }) => {
   const {
     register,
     handleSubmit,
@@ -45,9 +43,7 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
       className="flex flex-col gap-8"
       onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">Create a new teacher</h1>
-      <span className="text-xs text-gray-400 font-medium">
-        Authentication Information
-      </span>
+      <span className="text-xs text-gray-400 font-medium">Authentication Information</span>
       <div className="flex justify-between flex-wrap gap-2">
         <InputField
           label="Username"
@@ -127,9 +123,7 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          {errors.sex?.message && (
-            <p className="text-sm text-red-400">{errors.sex?.message.toString()}</p>
-          )}
+          {errors.sex?.message && <p className="text-sm text-red-400">{errors.sex?.message.toString()}</p>}
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4 justify-center">
           <label
@@ -149,14 +143,10 @@ const TeacherForm = ({ type, data }: { type: "create" | "update"; data?: any }) 
             id="img"
             {...register("img")}
           />
-          {errors.img?.message && (
-            <p className="text-sm text-red-400">{errors.img?.message.toString()}</p>
-          )}
+          {errors.img?.message && <p className="text-sm text-red-400">{errors.img?.message.toString()}</p>}
         </div>
       </div>
-      <button className="bg-blue-500 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
-      </button>
+      <button className="bg-blue-500 text-white p-2 rounded-md">{type === "create" ? "Create" : "Update"}</button>
     </form>
   );
 };

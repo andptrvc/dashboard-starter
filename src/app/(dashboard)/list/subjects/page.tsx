@@ -38,9 +38,7 @@ const renderRow = (item: SubjectList) => (
         <h3 className="font-semibold">{item.name}</h3>
       </div>
     </td>
-    <td className="hidden md:table-cell">
-      {item.teachers.map((teacher) => teacher.name).join(",")}
-    </td>
+    <td className="hidden md:table-cell">{item.teachers.map((teacher) => teacher.name).join(",")}</td>
     <td>
       <div className="flex items-center gap-2">
         {role === "admin" && (
@@ -62,11 +60,7 @@ const renderRow = (item: SubjectList) => (
     </td>
   </tr>
 );
-const SubjectListPage = async ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) => {
+const SubjectListPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
   const { page, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
