@@ -37,9 +37,7 @@ const Announcements = async () => {
           <div className="bg-lamaSkyLight rounded-md p-4">
             <div className="flex items-center justify-between">
               <h2 className="font-medium">{data[0].title}</h2>
-              <span className="text-xs text-gray-400 bg-white rounded-md p-1">
-                {new Intl.DateTimeFormat("en-GB").format(data[0].date)}
-              </span>
+              <span className="text-xs text-gray-400 bg-white rounded-md p-1">{new Intl.DateTimeFormat("en-GB").format(data[0].date)}</span>
             </div>
             <p className=" text-sm text-gray-400 mt-1">{data[0].description}</p>
           </div>
@@ -48,9 +46,7 @@ const Announcements = async () => {
           <div className="bg-lamaPurpleLight rounded-md p-4">
             <div className="flex items-center justify-between">
               <h2 className="font-medium">{data[1].title}</h2>
-              <span className="text-xs text-gray-400 bg-white rounded-md p-1">
-                {new Intl.DateTimeFormat("en-GB").format(data[1].date)}
-              </span>
+              <span className="text-xs text-gray-400 bg-white rounded-md p-1">{new Intl.DateTimeFormat("en-GB").format(data[1].date)}</span>
             </div>
             <p className=" text-sm text-gray-400 mt-1">{data[1].description}</p>
           </div>
@@ -59,9 +55,7 @@ const Announcements = async () => {
           <div className="bg-lamaYellowLight rounded-md p-4">
             <div className="flex items-center justify-between">
               <h2 className="font-medium">{data[2].title}</h2>
-              <span className="text-xs text-gray-400 bg-white rounded-md p-1">
-                {new Intl.DateTimeFormat("en-GB").format(data[2].date)}
-              </span>
+              <span className="text-xs text-gray-400 bg-white rounded-md p-1">{new Intl.DateTimeFormat("en-GB").format(data[2].date)}</span>
             </div>
             <p className=" text-sm text-gray-400 mt-1">{data[2].description}</p>
           </div>

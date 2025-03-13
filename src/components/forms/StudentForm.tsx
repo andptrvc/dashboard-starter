@@ -48,7 +48,7 @@ const StudentForm = ({
       setOpen(false);
       router.refresh();
     }
-  }, [state]);
+  }, [state, router, setOpen, type]);
 
   const { grades, classes } = relatedData;
 

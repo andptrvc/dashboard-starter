@@ -105,7 +105,7 @@ const FormModal = ({ table, type, data, id, relatedData }: FormConainerProps & {
         setOpen(false);
         router.refresh();
       }
-    }, [state]);
+    }, [state, router]);
 
     return type === "delete" && id ? (
       <form

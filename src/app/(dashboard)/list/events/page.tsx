@@ -5,7 +5,7 @@ import TableSearch from "@/components/TableSearch";
 
 import { prisma } from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { currentUserId, role } from "@/lib/utils";
+import { auth } from "@clerk/nextjs/server";
 import { Class, Event, Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,93 +13,92 @@ import React from "react";
 
 type EventList = Event & { class: Class };
 
-const columns = [
-  {
-    header: "Title",
-    accessor: "title",
-  },
-  {
-    header: "Class",
-    accessor: "class",
-  },
-  {
-    header: "Date",
-    accessor: "date",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "Start time",
-    accessor: "startTime",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "End time",
-    accessor: "endTime",
-    className: "hidden lg:table-cell",
-  },
-  ...(role === "admin"
-    ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
-    : []),
-];
+const EventsListPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
+  const { sessionClaims, userId } = await auth();
 
-const renderRow = (item: EventList) => (
-  <tr
-    key={item.id}
-    className="border-b border-gray-200 even:bg-gray-50 text-sm hover:bg-lamaPurpleLight">
-    <td className="flex items-center gap-4 p-4">
-      <div className="flex flex-col">
-        <h3 className="font-semibold">{item.title}</h3>
-      </div>
-    </td>
-    <td>{item.class?.name || "-"} </td>
-    <td className="hidden md:table-cell">
-      {new Intl.DateTimeFormat("en-US").format(item.startTime)}
-    </td>
-    <td className="hidden md:table-cell">
-      {item.startTime.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })}
-    </td>
-    <td className="hidden md:table-cell">
-      {item.endTime.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })}
-    </td>
-    <td>
-      <div className="flex items-center gap-2">
-        {role === "admin" && (
-          <>
-            <FormModal
-              table="event"
-              type="update"
-              data={item}
-            />
+  const currentUserId = userId!;
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const columns = [
+    {
+      header: "Title",
+      accessor: "title",
+    },
+    {
+      header: "Class",
+      accessor: "class",
+    },
+    {
+      header: "Date",
+      accessor: "date",
+      className: "hidden lg:table-cell",
+    },
+    {
+      header: "Start time",
+      accessor: "startTime",
+      className: "hidden lg:table-cell",
+    },
+    {
+      header: "End time",
+      accessor: "endTime",
+      className: "hidden lg:table-cell",
+    },
+    ...(role === "admin"
+      ? [
+          {
+            header: "Actions",
+            accessor: "action",
+          },
+        ]
+      : []),
+  ];
 
-            <FormModal
-              table="event"
-              type="delete"
-              id={item.id}
-            />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-);
-const EventsListPage = async ({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) => {
+  const renderRow = (item: EventList) => (
+    <tr
+      key={item.id}
+      className="border-b border-gray-200 even:bg-gray-50 text-sm hover:bg-lamaPurpleLight">
+      <td className="flex items-center gap-4 p-4">
+        <div className="flex flex-col">
+          <h3 className="font-semibold">{item.title}</h3>
+        </div>
+      </td>
+      <td>{item.class?.name || "-"} </td>
+      <td className="hidden md:table-cell">{new Intl.DateTimeFormat("en-US").format(item.startTime)}</td>
+      <td className="hidden md:table-cell">
+        {item.startTime.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
+      </td>
+      <td className="hidden md:table-cell">
+        {item.endTime.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
+      </td>
+      <td>
+        <div className="flex items-center gap-2">
+          {role === "admin" && (
+            <>
+              <FormModal
+                table="event"
+                type="update"
+                data={item}
+              />
+
+              <FormModal
+                table="event"
+                type="delete"
+                id={item.id}
+              />
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
+
   const { page, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
@@ -132,10 +131,7 @@ const EventsListPage = async ({
     parent: { students: { some: { parentId: currentUserId! } } },
   };
 
-  query.OR = [
-    { classId: null },
-    { class: roleConditions[role as keyof typeof roleConditions] || {} },
-  ];
+  query.OR = [{ classId: null }, { class: roleConditions[role as keyof typeof roleConditions] || {} }];
 
   // switch (role) {
   //   case "admin":
