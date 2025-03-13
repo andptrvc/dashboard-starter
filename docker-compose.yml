@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
-  postgress:
+  postgres:
     image: postgres:15
     container_name: postgres_db
     environment:
       POSTGRES_USER: andras
-      POSTGRES_PASSWROD: andras12345
+      POSTGRES_PASSWORD: andras12345
       POSTGRES_DB: school
     ports:
       - "5432:5432"
@@ -14,10 +12,19 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   app:
+    image: node:18 # Use a Node.js image
     container_name: nextjs_app
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules # Prevents overwriting node_modules
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL: "postgresql://andras:andras12345@localhost:5432/school"
+      - DATABASE_URL=postgresql://andras:andras12345@postgres:5432/school
     depends_on:
-      - postgress
+      - postgres
+    command: sh -c "npm install && npx prisma generate && npx prisma migrate dev && npm run build && npm run start"
+
+volumes:
+  postgres_data:
